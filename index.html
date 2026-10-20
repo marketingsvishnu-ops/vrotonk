@@ -1,0 +1,534 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRON DISTRICT | Train Without Limits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --black:#171815;
+  --panel:#22231f;
+  --paper:#f0efe8;
+  --muted:#a4a49a;
+  --acid:#d5ff35;
+  --line:rgba(240,239,232,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);
+  color:var(--paper);
+  font-family:'DM Sans',sans-serif;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+::selection{background:var(--acid);color:var(--black)}
+
+.noise{
+  position:fixed;inset:0;pointer-events:none;z-index:20;
+  opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+.container{width:min(1200px,90%);margin:auto}
+.condensed{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+.acid{color:var(--acid)}
+.label{
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--acid);font-weight:700;
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:22px;
+  background:var(--acid);color:var(--black);border:1px solid var(--acid);
+  padding:15px 20px;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:800;transition:.25s;
+}
+.btn:hover{background:transparent;color:var(--acid);transform:translateY(-3px)}
+.btn .arrow{font-size:19px;line-height:10px}
+.btn-outline{background:transparent;color:var(--paper);border-color:var(--line)}
+.btn-outline:hover{border-color:var(--acid);color:var(--acid)}
+
+header{
+  height:82px;display:flex;align-items:center;
+  border-bottom:1px solid var(--line);position:relative;z-index:30;
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:25px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:27px;letter-spacing:-1px}
+.logo span{color:var(--acid)}
+.logo small{display:block;font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:4px;font-weight:600;color:var(--muted);margin-top:-3px}
+.navlinks{display:flex;gap:29px}
+.navlinks a{font-size:11px;color:#c3c3ba;transition:.2s}
+.navlinks a:hover{color:var(--acid)}
+.nav-cta{padding:12px 16px;font-size:10px}
+.menu-btn{display:none;background:none;border:0;color:var(--paper);font-size:25px}
+
+.hero{min-height:690px;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:65px 65px;
+  mask-image:linear-gradient(to right,black,transparent 95%);
+}
+.hero-layout{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;position:relative;z-index:2;padding:65px 0}
+.hero-kicker{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.status-dot{height:7px;width:7px;background:var(--acid);border-radius:50%;box-shadow:0 0 12px var(--acid)}
+.hero h1{
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(76px,11vw,150px);
+  line-height:.77;letter-spacing:-4px;font-weight:900;text-transform:uppercase;
+}
+.hero h1 .outline{
+  color:transparent;-webkit-text-stroke:1px var(--paper);
+}
+.hero h1 .highlight{color:var(--acid)}
+.hero-copy{font-size:13px;color:#a9aaa1;line-height:1.9;max-width:360px;margin:30px 0 24px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-bottom{display:flex;gap:30px;margin-top:42px}
+.hero-stat{border-left:1px solid var(--line);padding-left:14px}
+.hero-stat strong{display:block;font:700 30px 'Barlow Condensed',sans-serif}
+.hero-stat span{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+
+.hero-art{height:490px;position:relative;display:flex;align-items:center;justify-content:center}
+.art-frame{
+  position:absolute;inset:35px 15px 20px 35px;border:1px solid rgba(213,255,53,.35);
+  transform:rotate(4deg);
+}
+.art-inner{
+  position:absolute;inset:15px 30px 35px 10px;overflow:hidden;
+  background:
+  radial-gradient(ellipse at 55% 35%,rgba(213,255,53,.18),transparent 40%),
+  linear-gradient(145deg,#36382e,#171815 70%);
+  border:1px solid rgba(255,255,255,.12);
+}
+.art-inner:before{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,transparent 0 35px,rgba(255,255,255,.025) 36px 37px);
+}
+.orbit{
+  position:absolute;width:300px;height:390px;border:1px solid rgba(213,255,53,.45);
+  border-radius:50%;transform:rotate(35deg);
+  animation:orbit 14s linear infinite;
+}
+.orbit.two{width:260px;height:360px;transform:rotate(-42deg);border-color:rgba(255,255,255,.2);animation-duration:18s;animation-direction:reverse}
+.orbit.three{width:190px;height:290px;transform:rotate(80deg);border-color:rgba(213,255,53,.2);animation-duration:22s}
+@keyframes orbit{to{rotate:360deg}}
+.giant-x{
+  position:absolute;font:900 260px 'Barlow Condensed',sans-serif;
+  color:var(--acid);opacity:.85;line-height:1;
+  text-shadow:0 0 70px rgba(213,255,53,.13);
+}
+.art-index{position:absolute;left:20px;top:20px;font-size:9px;letter-spacing:2px;color:var(--muted)}
+.art-tag{position:absolute;right:15px;bottom:20px;background:var(--acid);color:var(--black);padding:11px 13px;font:800 16px 'Barlow Condensed',sans-serif;transform:rotate(-3deg)}
+.art-vertical{position:absolute;right:0;top:35%;writing-mode:vertical-rl;font-size:9px;letter-spacing:4px;color:var(--muted)}
+
+.ticker{background:var(--acid);color:var(--black);overflow:hidden;padding:14px 0;transform:rotate(-1deg) scale(1.02)}
+.ticker-track{display:flex;width:max-content;animation:marquee 28s linear infinite}
+.ticker span{font:900 24px 'Barlow Condensed',sans-serif;text-transform:uppercase;white-space:nowrap;padding-right:30px}
+.ticker b{padding-right:30px;font-size:17px}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+.section{padding:105px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:45px}
+.section h2{font:800 clamp(48px,7vw,83px)/.88 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:-1px}
+.section-intro{font-size:12px;line-height:1.9;color:var(--muted);max-width:330px}
+.programs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.program{
+  min-height:350px;background:var(--panel);border:1px solid var(--line);
+  padding:25px;position:relative;overflow:hidden;transition:.3s;
+}
+.program:hover{border-color:var(--acid);transform:translateY(-6px)}
+.program-number{font:700 13px 'Barlow Condensed',sans-serif;color:var(--acid)}
+.program-icon{height:115px;display:grid;place-items:center;font-size:65px;color:var(--acid);opacity:.85}
+.program h3{font:800 36px 'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:10px}
+.program p{font-size:11px;line-height:1.8;color:var(--muted);max-width:270px}
+.program-foot{position:absolute;bottom:20px;left:25px;right:25px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.program-foot b{color:var(--acid);font-size:18px}
+
+.manifesto{background:var(--acid);color:var(--black);padding:75px 0;position:relative;overflow:hidden}
+.manifesto:after{content:"ID";position:absolute;right:-10px;bottom:-100px;font:900 340px 'Barlow Condensed',sans-serif;opacity:.07;line-height:1}
+.manifesto-layout{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;position:relative;z-index:1}
+.manifesto h2{font:900 clamp(55px,8vw,105px)/.83 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.manifesto h2 span{color:transparent;-webkit-text-stroke:1.5px var(--black)}
+.manifesto p{font-size:13px;line-height:2;max-width:450px;margin-bottom:23px}
+.manifesto .label{color:#3e4d00}
+
+.memberships{background:#1b1c18}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan{padding:30px 25px;border:1px solid var(--line);position:relative;min-height:360px}
+.plan.featured{background:var(--acid);color:var(--black);border-color:var(--acid)}
+.plan-badge{position:absolute;top:0;right:0;background:var(--acid);color:var(--black);padding:8px 11px;font-size:8px;letter-spacing:1px;font-weight:900}
+.plan.featured .plan-badge{background:var(--black);color:var(--acid)}
+.plan-name{font:700 26px 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.plan-price{font:900 60px 'Barlow Condensed',sans-serif;margin:23px 0 2px;letter-spacing:-2px}
+.plan-price small{font:500 12px 'DM Sans',sans-serif;letter-spacing:0}
+.plan-desc{font-size:11px;color:var(--muted);margin-bottom:25px}
+.plan.featured .plan-desc{color:#525c31}
+.plan ul{list-style:none;display:grid;gap:14px;margin-bottom:28px}
+.plan li{font-size:11px;display:flex;gap:9px;align-items:center}
+.plan li:before{content:"+";font-size:15px;color:var(--acid);font-weight:900}
+.plan.featured li:before{color:#4d6000}
+.plan .btn{width:100%;background:transparent;color:var(--paper);border-color:var(--line)}
+.plan .btn:hover{background:var(--acid);color:var(--black);border-color:var(--acid)}
+.plan.featured .btn{background:var(--black);color:var(--acid);border-color:var(--black)}
+.plan.featured .btn:hover{background:transparent;color:var(--black)}
+
+.bmi-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:center}
+.bmi-copy p{font-size:12px;line-height:2;color:var(--muted);margin-top:22px;max-width:390px}
+.bmi-box{border:1px solid var(--line);background:var(--panel);padding:30px}
+.bmi-box h3{font:700 27px 'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:25px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:9px}
+.field input{width:100%;background:var(--black);border:1px solid var(--line);padding:14px;color:var(--paper);outline:none}
+.field input:focus{border-color:var(--acid)}
+.bmi-box .btn{width:100%;margin-top:18px}
+.bmi-result{display:none;margin-top:20px;padding:20px;border:1px solid var(--acid)}
+.bmi-result strong{font:800 42px 'Barlow Condensed',sans-serif;color:var(--acid)}
+.bmi-result p{font-size:12px;color:var(--muted);margin-top:4px}
+.bmi-scale{height:5px;background:linear-gradient(to right,#7cc8ff,#7dca78,#e6d05b,#ed795d);margin-top:17px}
+
+.contact-strip{padding:55px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.contact-layout{display:flex;justify-content:space-between;align-items:center;gap:25px}
+.contact-layout h2{font:800 clamp(35px,5vw,65px)/.9 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.contact-layout p{font-size:11px;color:var(--muted);margin-top:12px}
+footer{padding:30px 0}
+.footer-layout{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.footer-note{font-size:10px;color:var(--muted)}
+.socials{display:flex;gap:18px;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+.socials a:hover{color:var(--acid)}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:800px){
+ .navlinks{display:none;position:absolute;top:81px;left:0;right:0;background:var(--black);padding:25px 5%;border-bottom:1px solid var(--line);flex-direction:column;gap:22px}
+ .navlinks.open{display:flex}
+ .nav-cta{display:none}.menu-btn{display:block}
+ .hero{min-height:auto}
+ .hero-layout{grid-template-columns:1fr;padding:75px 0 55px}
+ .hero h1{font-size:clamp(78px,17vw,125px)}
+ .hero-art{height:370px;margin-top:15px}
+ .giant-x{font-size:210px}
+ .orbit{height:290px;width:220px}
+ .orbit.two{height:270px;width:200px}
+ .orbit.three{height:230px;width:155px}
+ .section{padding:75px 0}
+ .section-head{align-items:start;flex-direction:column}
+ .programs,.plans{grid-template-columns:1fr}
+ .program{min-height:310px}
+ .manifesto-layout,.bmi-layout{grid-template-columns:1fr;gap:30px}
+ .manifesto{padding:60px 0}
+ .contact-layout{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:450px){
+ .hero h1{letter-spacing:-2px}
+ .hero-bottom{gap:17px}
+ .hero-stat strong{font-size:25px}
+ .hero-art{height:320px}
+ .fields{grid-template-columns:1fr}
+ .bmi-box{padding:20px}
+ .footer-layout{align-items:flex-start;flex-direction:column}
+ .ticker span{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+ .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+<div class="noise"></div>
+
+<header>
+  <div class="container nav">
+    <a href="#home" class="logo">IRON<span> / </span>DISTRICT<small>STRENGTH CULTURE</small></a>
+    <nav class="navlinks" id="navlinks">
+      <a href="#training">TRAINING</a>
+      <a href="#philosophy">OUR PHILOSOPHY</a>
+      <a href="#membership">MEMBERSHIP</a>
+      <a href="#bmi">BMI CHECK</a>
+      <a href="#contact">CONTACT</a>
+    </nav>
+    <a href="#membership" class="btn nav-cta">JOIN THE DISTRICT ↗</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="container hero-layout">
+    <div>
+      <div class="hero-kicker label"><span class="status-dot"></span> BUILT FOR THE RELENTLESS</div>
+      <h1>NO<br><span class="outline">SHORT</span><br><span class="highlight">CUTS.</span></h1>
+      <p class="hero-copy">Forget average. Build strength, sharpen your mindset, and become the version of yourself you haven't met yet.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#membership">START YOUR ERA <span class="arrow">↗</span></a>
+        <a class="btn btn-outline" href="#training">EXPLORE TRAINING <span class="arrow">↓</span></a>
+      </div>
+      <div class="hero-bottom">
+        <div class="hero-stat"><strong>24/7</strong><span>Serious energy</span></div>
+        <div class="hero-stat"><strong>03</strong><span>Training zones</span></div>
+        <div class="hero-stat"><strong>100%</strong><span>Your effort</span></div>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-label="Abstract industrial motion artwork">
+      <div class="art-frame"></div>
+      <div class="art-inner">
+        <div class="art-index">FIG. 001 / HUMAN POTENTIAL</div>
+        <div class="orbit"></div><div class="orbit two"></div><div class="orbit three"></div>
+        <div class="giant-x">X</div>
+        <div class="art-tag">WORK / WIN / REPEAT</div>
+      </div>
+      <div class="art-vertical">STRENGTH IS A PRACTICE — NOT A DESTINATION</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Built different</span><b>✳</b><span>Earn every rep</span><b>✳</b><span>No shortcuts</span><b>✳</b><span>Stronger every day</span><b>✳</b>
+    <span>Built different</span><b>✳</b><span>Earn every rep</span><b>✳</b><span>No shortcuts</span><b>✳</b><span>Stronger every day</span><b>✳</b>
+  </div>
+</div>
+
+<section class="section" id="training">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="label">01 / YOUR TRAINING FLOOR</div>
+        <h2>FIND YOUR<br>FORM OF <span class="acid">POWER.</span></h2>
+      </div>
+      <p class="section-intro">Different goals. Different disciplines. One standard: show up and put in the work.</p>
+    </div>
+
+    <div class="programs">
+      <article class="program reveal">
+        <div class="program-number">PROGRAM / 001</div>
+        <div class="program-icon">↗</div>
+        <h3>Strength Lab</h3>
+        <p>Progressive resistance training built around real technique, compound lifts and measurable strength.</p>
+        <div class="program-foot"><span>Strength / Power</span><b>01</b></div>
+      </article>
+      <article class="program reveal">
+        <div class="program-number">PROGRAM / 002</div>
+        <div class="program-icon">✳</div>
+        <h3>Conditioning</h3>
+        <p>Push your engine with purposeful intervals, endurance work and full-body conditioning sessions.</p>
+        <div class="program-foot"><span>Engine / Stamina</span><b>02</b></div>
+      </article>
+      <article class="program reveal">
+        <div class="program-number">PROGRAM / 003</div>
+        <div class="program-icon">◎</div>
+        <h3>Performance</h3>
+        <p>Improve mobility, coordination and athletic movement with structured sessions and expert guidance.</p>
+        <div class="program-foot"><span>Movement / Control</span><b>03</b></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="manifesto" id="philosophy">
+  <div class="container manifesto-layout">
+    <div class="reveal">
+      <div class="label">02 / THE DISTRICT CODE</div>
+      <h2>YOUR ONLY<br>COMPETITION<br>IS <span>YESTERDAY.</span></h2>
+    </div>
+    <div class="reveal">
+      <p>We believe fitness is built in the small decisions: one more rep, one better meal, one early morning, one day you refuse to quit.</p>
+      <p>Our floor is for beginners learning the basics and athletes chasing the next level. Respect the process. Respect each other. Leave stronger.</p>
+      <a class="btn btn-outline" href="#membership">BECOME A MEMBER <span class="arrow">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section memberships" id="membership">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="label">03 / MEMBERSHIP ACCESS</div>
+        <h2>INVEST IN<br><span class="acid">YOURSELF.</span></h2>
+      </div>
+      <p class="section-intro">Pick your level. Commit to your goals. Your next chapter starts on the training floor.</p>
+    </div>
+
+    <div class="plans">
+      <article class="plan reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$29<small> / month</small></div>
+        <p class="plan-desc">Your foundation starts here.</p>
+        <ul>
+          <li>Gym floor access</li>
+          <li>Free weights and machines</li>
+          <li>Locker room access</li>
+          <li>Fitness orientation</li>
+        </ul>
+        <a class="btn" href="#contact">CHOOSE STARTER ↗</a>
+      </article>
+
+      <article class="plan featured reveal">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Athlete</div>
+        <div class="plan-price">$59<small> / month</small></div>
+        <p class="plan-desc">For people who want more.</p>
+        <ul>
+          <li>Everything in Starter</li>
+          <li>Group training sessions</li>
+          <li>Monthly progress review</li>
+          <li>Priority class booking</li>
+        </ul>
+        <a class="btn" href="#contact">CHOOSE ATHLETE ↗</a>
+      </article>
+
+      <article class="plan reveal">
+        <div class="plan-name">Performance</div>
+        <div class="plan-price">$99<small> / month</small></div>
+        <p class="plan-desc">Your goals. A smarter plan.</p>
+        <ul>
+          <li>Everything in Athlete</li>
+          <li>Personal coaching session</li>
+          <li>Custom training plan</li>
+          <li>Quarterly performance review</li>
+        </ul>
+        <a class="btn" href="#contact">CHOOSE PERFORMANCE ↗</a>
+      </article>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:20px">Sample pricing for demonstration. Replace with your actual membership rates.</p>
+  </div>
+</section>
+
+<section class="section" id="bmi">
+  <div class="container bmi-layout">
+    <div class="bmi-copy reveal">
+      <div class="label">04 / KNOW YOUR BASELINE</div>
+      <h2 class="section" style="padding:20px 0 0">DATA<br>MEETS<br><span class="acid">DISCIPLINE.</span></h2>
+      <p>Get a quick BMI estimate as one starting point for understanding your body. Use it as general information, not a diagnosis or a complete measure of health.</p>
+    </div>
+
+    <div class="bmi-box reveal">
+      <h3>Body metrics / Calculator</h3>
+      <div class="fields">
+        <div class="field">
+          <label for="height">Height (cm)</label>
+          <input id="height" type="number" min="50" max="250" placeholder="e.g. 175">
+        </div>
+        <div class="field">
+          <label for="weight">Weight (kg)</label>
+          <input id="weight" type="number" min="10" max="500" placeholder="e.g. 75">
+        </div>
+      </div>
+      <button class="btn" id="calculate">CALCULATE BMI <span class="arrow">↗</span></button>
+      <div class="bmi-result" id="bmiResult" aria-live="polite">
+        <div class="label">YOUR ESTIMATE</div>
+        <strong id="bmiNumber">0.0</strong>
+        <p id="bmiCategory"></p>
+        <div class="bmi-scale"></div>
+      </div>
+      <p style="font-size:10px;line-height:1.7;color:var(--muted);margin-top:15px">BMI is a screening measure and does not distinguish muscle from fat or account for every individual difference.</p>
+    </div>
+  </div>
+</section>
+
+<section class="contact-strip" id="contact">
+  <div class="container contact-layout">
+    <div>
+      <div class="label">05 / YOUR MOVE</div>
+      <h2>LESS TALK.<br><span class="acid">MORE WORK.</span></h2>
+      <p>Ready to train? Get in touch and ask about your first session.</p>
+    </div>
+    <a class="btn" href="mailto:hello@yourgym.com?subject=Iron%20District%20Membership">LET'S GET STARTED <span class="arrow">↗</span></a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container footer-layout">
+    <a href="#home" class="logo">IRON<span> / </span>DISTRICT<small>STRENGTH CULTURE</small></a>
+    <div class="footer-note">© <span id="year"></span> IRON DISTRICT. BUILT THROUGH EFFORT.</div>
+    <div class="socials">
+      <a href="#">Instagram ↗</a>
+      <a href="#">TikTok ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const menuBtn = document.getElementById('menuBtn');
+const navlinks = document.getElementById('navlinks');
+
+menuBtn.addEventListener('click', () => {
+  const opened = navlinks.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', opened);
+  menuBtn.textContent = opened ? '✕' : '☰';
+});
+
+navlinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navlinks.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.textContent = '☰';
+  });
+});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.12});
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+document.getElementById('calculate').addEventListener('click', () => {
+  const height = Number(document.getElementById('height').value);
+  const weight = Number(document.getElementById('weight').value);
+  const result = document.getElementById('bmiResult');
+  const number = document.getElementById('bmiNumber');
+  const category = document.getElementById('bmiCategory');
+
+  if (!height || !weight || height < 50 || height > 250 || weight < 10 || weight > 500) {
+    alert('Enter a valid height (50–250 cm) and weight (10–500 kg).');
+    return;
+  }
+
+  const bmi = weight / ((height / 100) ** 2);
+  let status;
+
+  if (bmi < 18.5) status = 'Below the usual adult reference range';
+  else if (bmi < 25) status = 'Within the usual adult reference range';
+  else if (bmi < 30) status = 'Above the usual adult reference range';
+  else status = 'In the high adult BMI range';
+
+  number.textContent = bmi.toFixed(1);
+  category.textContent = status;
+  result.style.display = 'block';
+});
+
+const art = document.querySelector('.hero-art');
+const inner = document.querySelector('.art-inner');
+
+if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+  art.addEventListener('mousemove', event => {
+    const rect = art.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - .5;
+    const y = (event.clientY - rect.top) / rect.height - .5;
+    inner.style.transform = `perspective(800px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg)`;
+  });
+  art.addEventListener('mouseleave', () => {
+    inner.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+  });
+}
+</script>
+</body>
+</html>
+```
